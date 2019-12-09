@@ -1,0 +1,29 @@
+﻿<#@ template language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+
+<# Type[] types = new[] {
+    typeof(Int16), typeof(Int32), typeof(Int64),
+    typeof(UInt16), typeof(UInt32), typeof(UInt64)
+    };
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Chord.IO.Service.Core
+{
+    public static class Math {
+    <# foreach (var type in types) 
+    { 
+    #>
+        public static <#= type.Name #> Steps (IReadOnlyList<<#= type.Name #>> source, <#= type.Name #> value) 
+        {
+            return source
+                .Where(x => x >= value)
+                .Min();
+        }
+    <#
+    } #>
+}
+}
