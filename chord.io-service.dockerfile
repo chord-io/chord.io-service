@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:3.1-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:3.1-sdk as build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as build
 WORKDIR /app
 COPY ./*.csproj ./
 WORKDIR /app
