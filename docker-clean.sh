@@ -1,1 +1,1 @@
-docker image rm --force $docker_registry/chord.io/choird.io-service
+docker image rm --force $docker_registry/chord.io/chord.io-service
