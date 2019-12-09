@@ -1,0 +1,1 @@
+docker build -f chord.io-service.dockerfile -t $docker_registry/chord.io/choird.io-service .

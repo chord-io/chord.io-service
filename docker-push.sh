@@ -1,0 +1,1 @@
+docker push $docker_registry/chord.io/choird.io-service
