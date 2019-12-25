@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using Chord.IO.Service.Services;
+using Chord.IO.Service.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +22,7 @@ namespace Chord.IO.Service
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             services
                 .AddControllers()
@@ -40,6 +42,11 @@ namespace Chord.IO.Service
             });
 
             services.AddSwaggerGenNewtonsoftSupport();
+
+            MongoConnectionSettings.Configure(context, services);
+
+            services.AddSingleton<MongoClient>();
+            services.AddSingleton<ProjectService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
