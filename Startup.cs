@@ -30,7 +30,7 @@ namespace Chord.IO.Service
             builder.AddEnvironmentVariables();
         }
 
-        public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddControllers()
