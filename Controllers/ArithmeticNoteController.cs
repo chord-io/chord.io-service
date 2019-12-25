@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Chord.IO.Service.Dto;
-using Chord.IO.Service.Models;
+﻿using Chord.IO.Service.Dto;
 using Chord.IO.Service.Models.Arithmetic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Threading.Tasks;
 
 namespace Chord.IO.Service.Controllers
 {
@@ -14,6 +14,7 @@ namespace Chord.IO.Service.Controllers
     {
         #region Creations
         [HttpPost]
+        [SwaggerOperation(OperationId = "Create")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> Create([FromBody] NoteDto dto)
@@ -35,6 +36,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Representations
         [HttpPost("from-string/{note}")]
+        [SwaggerOperation(OperationId = "FromString")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> FromString(string note)
@@ -54,6 +56,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-string")]
+        [SwaggerOperation(OperationId = "ToString")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<string>> ToString([FromBody] NoteDto dto)
@@ -76,6 +79,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Conversions
         [HttpPost("from-midi/{index}")]
+        [SwaggerOperation(OperationId = "FromMidi")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> FromMidi(uint index)
@@ -95,6 +99,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-midi")]
+        [SwaggerOperation(OperationId = "ToMidi")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<uint>> ToMidi([FromBody] NoteDto dto)
@@ -115,6 +120,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("from-integral/{index}")]
+        [SwaggerOperation(OperationId = "FromIntegral")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> FromIntegral(uint index)
@@ -134,6 +140,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-integral")]
+        [SwaggerOperation(OperationId = "ToIntegral")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<uint>> ToIntegral([FromBody] NoteDto dto)
@@ -156,6 +163,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Transformations
         [HttpPost("interval/{degree}")]
+        [SwaggerOperation(OperationId = "GetInterval")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> GetInterval([FromBody] NoteDto dto, uint degree)
@@ -176,6 +184,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("shift/to-right/{distance}")]
+        [SwaggerOperation(OperationId = "ShiftToRight")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> ShiftToRight([FromBody] NoteDto dto, uint distance)
@@ -196,6 +205,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("shift/to-left/{distance}")]
+        [SwaggerOperation(OperationId = "ShiftToLeft")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> ShiftToLeft([FromBody] NoteDto dto, uint distance)
@@ -216,6 +226,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("alter/upward/{semitones}")]
+        [SwaggerOperation(OperationId = "AlterUpward")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> AlterUpward([FromBody] NoteDto dto, int semitones)
@@ -236,6 +247,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("alter/downward/{semitones}")]
+        [SwaggerOperation(OperationId = "AlterDownward")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> AlterDownward([FromBody] NoteDto dto, int semitones)
@@ -256,6 +268,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("simplify")]
+        [SwaggerOperation(OperationId = "Simplify")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> Simplify([FromBody] NoteDto dto)

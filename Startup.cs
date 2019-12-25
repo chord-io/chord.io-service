@@ -34,9 +34,12 @@ namespace Chord.IO.Service
                 options.SwaggerDoc("1.0", new OpenApiInfo
                 {
                     Title = "chord.io",
-                    Version = "1.0"
+                    Version = "1.0",
                 });
+                options.EnableAnnotations();
             });
+
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,7 +52,7 @@ namespace Chord.IO.Service
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "/help/{documentName}/swagger.json";
-
+                options.SerializeAsV2 = true;
             });
 
             app.UseSwaggerUI(options =>

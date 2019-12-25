@@ -15,8 +15,7 @@ namespace Chord.IO.Service.Services
 
         public ProjectService(MongoClient client)
         {
-            var database = client.GetDatabase("");
-            this._projects = database.GetCollection<Project>("");
+            this._projects = client.Database.GetCollection<Project>("projects");
         }
 
         public async Task Create(Project document)

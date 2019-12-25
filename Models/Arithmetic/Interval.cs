@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Chord.IO.Service.Enums;
+using Chord.IO.Service.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Chord.IO.Service.Enums;
-using Chord.IO.Service.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chord.IO.Service.Models.Arithmetic

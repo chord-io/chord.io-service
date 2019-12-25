@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Chord.IO.Service.Dto;
-using Chord.IO.Service.Models;
+﻿using Chord.IO.Service.Dto;
 using Chord.IO.Service.Models.Hierarchy;
 using Chord.IO.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chord.IO.Service.Controllers
 {
@@ -50,6 +49,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(OperationId = "Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -72,6 +72,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [SwaggerOperation(OperationId = "Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,6 +97,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [SwaggerOperation(OperationId = "Delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -113,6 +115,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpGet("by-id/{id:length(24)}")]
+        [SwaggerOperation(OperationId = "GetById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> GetById(string id)
@@ -128,6 +131,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpGet("all/by-author-id/{authorId:length(24)}")]
+        [SwaggerOperation(OperationId = "GetAllByAuthorId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<Project>>> GetAllByAuthorId(string authorId)

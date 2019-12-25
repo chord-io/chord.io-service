@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chord.IO.Service.Models.Arithmetic;
+using Swashbuckle.AspNetCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chord.IO.Service.Controllers
 {
@@ -16,6 +18,7 @@ namespace Chord.IO.Service.Controllers
     {
         #region Utils
         [HttpGet("look-up-table")]
+        [SwaggerOperation(OperationId = "GetLookUpTable")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyDictionary<uint, IReadOnlyDictionary<uint, IntervalQuality>>>> GetLookUpTable()
         {
@@ -25,6 +28,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Creations
         [HttpPost("from-degree-and-quality")]
+        [SwaggerOperation(OperationId = "FromDegreeAndQuality")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromDegreeAndQuality([FromBody] IntervalDto dto)
@@ -44,6 +48,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("from-semitones-and-quality")]
+        [SwaggerOperation(OperationId = "FromSemitonesAndQuality")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromSemitonesAndQuality([FromBody] IntervalDto dto)
@@ -63,6 +68,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("from-degree-and-semitones")]
+        [SwaggerOperation(OperationId = "FromDegreeAndSemitones")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromDegreeAndSemitones([FromBody] IntervalDto dto)
@@ -82,6 +88,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("from-notes")]
+        [SwaggerOperation(OperationId = "FromNotes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromNotes([FromBody] NotePairDto dto)
@@ -103,6 +110,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Representations
         [HttpPost("from-string/{interval}")]
+        [SwaggerOperation(OperationId = "FromString")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromString(string interval)
@@ -122,9 +130,10 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-string/{format}")]
+        [SwaggerOperation(OperationId = "ToString")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> ToString([FromBody] IntervalDto dto, [FromQuery] IntervalFormat format)
+        public async Task<ActionResult<string>> ToString([FromBody] IntervalDto dto, IntervalFormat format)
         {
             return await Task<ActionResult<string>>.Factory.StartNew(() =>
             {
@@ -144,6 +153,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Conversions
         [HttpPost("from-integral/{index}")]
+        [SwaggerOperation(OperationId = "FromIntegral")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromIntegral(uint index)
@@ -163,6 +173,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-integral")]
+        [SwaggerOperation(OperationId = "ToIntegral")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<uint>> ToIntegral([FromBody] IntervalDto dto)
@@ -185,6 +196,7 @@ namespace Chord.IO.Service.Controllers
 
         #region Transformations
         [HttpPost("invert")]
+        [SwaggerOperation(OperationId = "Invert")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> Invert([FromBody] IntervalDto dto)
@@ -205,6 +217,7 @@ namespace Chord.IO.Service.Controllers
         }
 
         [HttpPost("to-note/{root}")]
+        [SwaggerOperation(OperationId = "ToNote")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> ToNote([FromBody] IntervalDto dto, string root)
