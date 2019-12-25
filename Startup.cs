@@ -22,8 +22,10 @@ namespace Chord.IO.Service
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
+        public void ConfigureServices(HostBuilderContext context, IServiceCollection services, IConfigurationBuilder builder)
         {
+            builder.AddEnvironmentVariables();
+
             services
                 .AddControllers()
                 .AddNewtonsoftJson(options =>
