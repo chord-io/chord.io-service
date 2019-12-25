@@ -51,7 +51,7 @@ namespace Chord.IO.Service
 
             services.AddSwaggerGenNewtonsoftSupport();
 
-            MongoConnectionSettings.Configure(context, services);
+            MongoConnectionSettings.Configure(Configuration, services);
 
             services.AddSingleton<MongoClient>();
             services.AddSingleton<ProjectService>();
