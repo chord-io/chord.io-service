@@ -15,17 +15,23 @@ namespace Chord.IO.Service
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(HostBuilderContext context, IServiceCollection services, IConfigurationBuilder builder)
+        public void ConfigurationBuilder(IConfigurationBuilder builder)
         {
             builder.AddEnvironmentVariables();
+        }
 
+        public void ConfigureServices(HostBuilderContext context, IServiceCollection services)
+        {
             services
                 .AddControllers()
                 .AddNewtonsoftJson(options =>
