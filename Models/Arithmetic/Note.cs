@@ -9,7 +9,7 @@ namespace Chord.IO.Service.Models.Arithmetic
     {
         private static readonly Regex Regex = new Regex(@"^(A|B|C|D|E|F|G)(#*|b*)(\d)$");
 
-        private static readonly IReadOnlyList<char> LookUpTable = new List<char>
+        public static readonly IReadOnlyList<char> LookUpTable = new List<char>
         {
             'C',
             'D',

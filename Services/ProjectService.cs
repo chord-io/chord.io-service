@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Chord.IO.Service.Models.Hierarchy;
+using Chord.IO.Service.Models.User;
 
 namespace Chord.IO.Service.Services
 {
@@ -60,6 +61,12 @@ namespace Chord.IO.Service.Services
                 1 => true,
                 _ => (bool?)null
             };
+        }
+
+        public async Task<bool> IsOwner(string id, User user)
+        {
+            var project = await this._projects.FindAsync(x => x.Id == id && x.AuthorId == user.Id);
+            return project.Any();
         }
     }
 }

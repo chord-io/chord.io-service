@@ -6,24 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chord.IO.Service.Controllers
 {
+    [Authorize]
     [Route("api/projects")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly ProjectService _service;
+        private readonly ProjectService _projectService;
+        private readonly UserService _userService;
 
-        public ProjectsController(ProjectService service)
+        public ProjectsController(ProjectService projectService, UserService userService)
         {
-            this._service = service;
+            this._projectService = projectService;
+            this._userService = userService;
         }
 
         private bool IsInvalidModel(Project model)
         {
             return !TryValidateModel(model, nameof(Project));
+        }
+
+        private async Task<bool> IsOwner(string id)
+        {
+            return await this._projectService.IsOwner(id, await this.GetUser(this._userService));
         }
 
         private BadRequestObjectResult ProcessInvalidModelState(Project model)
@@ -38,7 +47,7 @@ namespace Chord.IO.Service.Controllers
 
         private async Task<bool> IsProjectExist(Project model)
         {
-            var isExist = await this._service.IsExist(x => x.Name == model.Name && x.AuthorId == model.AuthorId);
+            var isExist = await this._projectService.IsExist(x => x.Name == model.Name && x.AuthorId == model.AuthorId);
 
             return isExist switch
             {
@@ -67,7 +76,7 @@ namespace Chord.IO.Service.Controllers
                 return this.Conflict($"project <{model.Name}> is already exist");
             }
 
-            await this._service.Create(model);
+            await this._projectService.Create(model);
             return this.CreatedAtAction("GetById", new {id = model.Id}, model);
         }
 
@@ -85,14 +94,19 @@ namespace Chord.IO.Service.Controllers
                 return this.ProcessInvalidModelState(model);
             }
 
-            var isExist = await this._service.IsExist(x => x.Id == id);
+            var isExist = await this._projectService.IsExist(x => x.Id == id);
 
             if (isExist == false)
             {
                 return this.NotFound($"project <{id}> not found");
             }
 
-            await this._service.Update(id, model);
+            if (!await this.IsOwner(id))
+            {
+                return this.Forbid($"user is not related to this project <{id}>");
+            }
+
+            await this._projectService.Update(id, model);
             return this.NoContent();
         }
 
@@ -103,14 +117,19 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> Delete(string id)
         {
-            var isExist = await this._service.IsExist(x => x.Id == id);
+            var isExist = await this._projectService.IsExist(x => x.Id == id);
 
             if (isExist == false)
             {
                 return this.NotFound($"project <{id}> not found");
             }
 
-            await this._service.Delete(id);
+            if (!await this.IsOwner(id))
+            {
+                return this.Forbid($"user is not related to this project <{id}>");
+            }
+
+            await this._projectService.Delete(id);
             return this.NoContent();
         }
 
@@ -120,11 +139,16 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> GetById(string id)
         {
-            var model = await this._service.GetBy(x => x.Id == id);
+            var model = await this._projectService.GetBy(x => x.Id == id);
 
             if (model is null)
             {
                 return this.NotFound($"project <{id}> not found");
+            }
+
+            if (!await this.IsOwner(id))
+            {
+                return this.Forbid($"user is not related to this project <{id}>");
             }
 
             return this.Ok(model);
@@ -136,7 +160,7 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<Project>>> GetAllByAuthorId(string authorId)
         {
-            var models = await this._service.GetAllBy(x => x.AuthorId == authorId);
+            var models = await this._projectService.GetAllBy(x => x.AuthorId == authorId);
 
             if (models is null)
             {
