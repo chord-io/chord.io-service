@@ -14,18 +14,18 @@ namespace Chord.IO.Service.Settings
     public class OAuthEndpointSettings
     {
         public string BaseUrl { get; set; }
-        public string Authorize { get; set; }
-        public string Token { get; set; }
-        public string Refresh { get; set; }
+        public string AuthorizeEndpoint { get; set; }
+        public string TokenEndpoint { get; set; }
+        public string RefreshEndpoint { get; set; }
 
         public static OAuthEndpointSettings Configure(IConfiguration configuration)
         {
             var settings = new OAuthEndpointSettings();
             var section = configuration.GetSection("oauth_endpoint_settings");
             settings.BaseUrl = section.GetSection("base_url").Value;
-            settings.Authorize = Path.Combine(settings.BaseUrl, section.GetSection("authorize").Value);
-            settings.Token = Path.Combine(settings.BaseUrl, section.GetSection("token").Value);
-            settings.Refresh = Path.Combine(settings.BaseUrl, section.GetSection("refresh").Value);
+            settings.AuthorizeEndpoint = Path.Combine(settings.BaseUrl, section.GetSection("authorize_endpoint").Value);
+            settings.TokenEndpoint = Path.Combine(settings.BaseUrl, section.GetSection("token_endpoint").Value);
+            settings.RefreshEndpoint = Path.Combine(settings.BaseUrl, section.GetSection("refresh_endpoint").Value);
             return settings;
         }
         

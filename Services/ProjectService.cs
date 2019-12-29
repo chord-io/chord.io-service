@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Chord.IO.Service.Models.Hierarchy;
 using Chord.IO.Service.Models.User;
+using IO.Swagger.Model;
 
 namespace Chord.IO.Service.Services
 {
@@ -51,6 +52,13 @@ namespace Chord.IO.Service.Services
             return result.DeletedCount == 1;
         }
 
+        public async Task<bool> DeleteAllByAuthor(string id)
+        {
+            var count = await this._projects.CountDocumentsAsync(x => x.AuthorId == id);
+            var result = await this._projects.DeleteManyAsync(x => x.AuthorId == id);
+            return result.DeletedCount == count;
+        }
+
         public async Task<bool?> IsExist(Expression<Func<Project, bool>> filter)
         {
             var result = await this._projects.CountDocumentsAsync(filter);
@@ -63,7 +71,7 @@ namespace Chord.IO.Service.Services
             };
         }
 
-        public async Task<bool> IsOwner(string id, User user)
+        public async Task<bool> IsOwner(string id, UserRepresentation user)
         {
             var project = await this._projects.FindAsync(x => x.Id == id && x.AuthorId == user.Id);
             return project.Any();

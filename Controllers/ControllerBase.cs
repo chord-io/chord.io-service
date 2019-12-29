@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chord.IO.Service.Models.User;
 using Chord.IO.Service.Services;
+using IO.Swagger.Model;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Chord.IO.Service.Controllers
@@ -27,11 +28,11 @@ namespace Chord.IO.Service.Controllers
                 $"{nameof(paramName)} {exception.Message}";
         }
 
-        protected async Task<User> GetUser(UserService service)
+        protected async Task<UserRepresentation> GetUser(KeyCloakService service)
         {
             var tokenString = await HttpContext.GetTokenAsync("Bearer", "access_token");
             var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-            var user = await service.GetOrCreate(token.Subject);
+            var user = await service.GetUser(token.Subject);
             return user;
         }
         #endregion

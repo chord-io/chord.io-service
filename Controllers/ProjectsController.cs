@@ -17,12 +17,12 @@ namespace Chord.IO.Service.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly ProjectService _projectService;
-        private readonly UserService _userService;
+        private readonly KeyCloakService _keycloakService;
 
-        public ProjectsController(ProjectService projectService, UserService userService)
+        public ProjectsController(ProjectService projectService, KeyCloakService keycloakService)
         {
             this._projectService = projectService;
-            this._userService = userService;
+            this._keycloakService = keycloakService;
         }
 
         private bool IsInvalidModel(Project model)
@@ -32,7 +32,7 @@ namespace Chord.IO.Service.Controllers
 
         private async Task<bool> IsOwner(string id)
         {
-            return await this._projectService.IsOwner(id, await this.GetUser(this._userService));
+            return await this._projectService.IsOwner(id, await this.GetUser(this._keycloakService));
         }
 
         private BadRequestObjectResult ProcessInvalidModelState(Project model)
@@ -154,17 +154,19 @@ namespace Chord.IO.Service.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet("all/by-author-id/{authorId:length(24)}")]
-        [SwaggerOperation(OperationId = "GetAllByAuthorId")]
+        [HttpGet("all/by-author/{authorId:length(24)}")]
+        [SwaggerOperation(OperationId = "GetAllByAuthor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<List<Project>>> GetAllByAuthorId(string authorId)
+        public async Task<ActionResult<List<Project>>> GetAllByAuthor()
         {
-            var models = await this._projectService.GetAllBy(x => x.AuthorId == authorId);
+            var user = await this.GetUser(this._keycloakService);
+
+            var models = await this._projectService.GetAllBy(x => x.AuthorId == user.Id);
 
             if (models is null)
             {
-                return this.NotFound($"projects related to author <{authorId}> not found");
+                return this.NotFound($"projects related to author <{user.Id}> not found");
             }
 
             return this.Ok(models);

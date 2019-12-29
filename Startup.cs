@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Chord.IO.Service
@@ -82,9 +84,9 @@ namespace Chord.IO.Service
                     {
                         Password = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri(endpoints.Authorize),
-                            TokenUrl = new Uri(endpoints.Token),
-                            RefreshUrl = new Uri(endpoints.Refresh)
+                            AuthorizationUrl = new Uri(endpoints.AuthorizeEndpoint),
+                            TokenUrl = new Uri(endpoints.TokenEndpoint),
+                            RefreshUrl = new Uri(endpoints.RefreshEndpoint)
                         }
                     }
                 });
@@ -102,6 +104,7 @@ namespace Chord.IO.Service
             {
                 options.Authority = Configuration.GetSection("jwt").GetSection("authority").Value;
                 options.Audience = Configuration.GetSection("jwt").GetSection("audience").Value;
+                options.RequireHttpsMetadata = false;
                 options.Events = new JwtBearerEvents()
                 {
                     OnAuthenticationFailed = context =>
@@ -119,9 +122,11 @@ namespace Chord.IO.Service
             });
 
             MongoConnectionSettings.Configure(Configuration, services);
+            KeycloakSettings.Configure(Configuration, services);
 
             services.AddSingleton<MongoClient>();
             services.AddSingleton<ProjectService>();
+            services.AddSingleton<KeyCloakService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
