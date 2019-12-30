@@ -76,6 +76,9 @@ namespace Chord.IO.Service.Controllers
                 return this.Conflict($"project <{model.Name}> is already exist");
             }
 
+            var user = await this.GetUser(this._keycloakService);
+            model.AuthorId = user.Id;
+
             await this._projectService.Create(model);
             return this.CreatedAtAction("GetById", new {id = model.Id}, model);
         }
@@ -105,6 +108,9 @@ namespace Chord.IO.Service.Controllers
             {
                 return this.Forbid($"user is not related to this project <{id}>");
             }
+
+            var user = await this.GetUser(this._keycloakService);
+            model.AuthorId = user.Id;
 
             await this._projectService.Update(id, model);
             return this.NoContent();

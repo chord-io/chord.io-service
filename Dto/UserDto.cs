@@ -5,6 +5,11 @@ namespace Chord.IO.Service.Dto
 {
     public class UserDto
     {
+        [MinLength(5, ErrorMessage = "Value {0} require a minimum length of {1} character")]
+        [Required(ErrorMessage = "Value {0} is required")]
+        [JsonProperty("username", Required = Required.Always)]
+        public string Username { get; set; }
+
         [EmailAddress(ErrorMessage = "Value {0} is not a valid email address")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("email", Required = Required.Always)]

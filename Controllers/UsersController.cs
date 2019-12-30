@@ -37,7 +37,7 @@ namespace Chord.IO.Service.Controllers
         {
             var user = new UserRepresentation
             {
-                Username = dto.Email,
+                Username = dto.Username,
                 Email = dto.Email,
                 Enabled = true,
                 Credentials = new List<CredentialRepresentation>
@@ -79,7 +79,7 @@ namespace Chord.IO.Service.Controllers
 
             var user = new UserRepresentation
             {
-                Username = dto.Email,
+                Username = dto.Username,
                 Email = dto.Email,
                 Enabled = true,
                 Credentials = new List<CredentialRepresentation>
@@ -126,6 +126,7 @@ namespace Chord.IO.Service.Controllers
 
             if (result.IsSuccessStatusCode)
             {
+                await this._projectService.DeleteAllByAuthor(id);
                 return this.NoContent();
             }
 
