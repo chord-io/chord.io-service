@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
@@ -44,7 +45,7 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost]
         [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(typeof(CreatedAtActionResult), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(HttpResponseMessage), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Create([FromBody] ProjectDto dto)
