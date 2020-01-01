@@ -8,10 +8,12 @@ namespace Chord.IO.Service.Dto
 {
     public class IntervalDto
     {
+        [Range(1, uint.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("degree", Required = Required.Always)]
         public uint Degree { get; set; }
 
+        [Range(0, uint.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("semitones", Required = Required.Always)]
         public uint Semitones { get; set; }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chord.IO.Service.Models.Arithmetic
@@ -122,6 +123,8 @@ namespace Chord.IO.Service.Models.Arithmetic
 
         public Interval(uint degree, uint semitones, IntervalQuality quality)
         {
+            IsDegreeValid(degree);
+
             this.Degree = degree;
             this.Semitones = semitones;
             this.Quality = quality;
@@ -214,11 +217,21 @@ namespace Chord.IO.Service.Models.Arithmetic
         {
             return degree - 3 - Convert.ToUInt32(Math.Floor((degree - 5) / 7.0D));
         }
+
+        public static void IsDegreeValid(uint degree)
+        {
+            if (degree == 0)
+            {
+                throw new ArgumentException($"must be between 1 and {uint.MaxValue}", nameof(degree));
+            }
+        }
         #endregion
 
         #region Creations
         public static Interval FromDegreeAndQuality(uint degree, IntervalQuality quality)
         {
+            IsDegreeValid(degree);
+
             var semitones = LookUpTable
                 .Single(x => x.Key == NormalizeDegree(degree))
                 .Value
@@ -239,6 +252,8 @@ namespace Chord.IO.Service.Models.Arithmetic
 
         public static Interval FromDegreeAndSemitones(uint degree, uint semitones)
         {
+            IsDegreeValid(degree);
+
             var quality = LookUpTable
                 .Single(x => x.Key == NormalizeDegree(degree))
                 .Value

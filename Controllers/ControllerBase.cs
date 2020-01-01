@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,18 +15,22 @@ namespace Chord.IO.Service.Controllers
     public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         #region Utils
-        protected string ProcessArgumentException(ArgumentException exception, string paramName)
+        protected ValidationProblemDetails ProcessArgumentException(ArgumentException exception, string paramName)
         {
-            var exceptionMessage = $"{exception.ParamName} {exception.Message}";
+            var parameterName = string.IsNullOrEmpty(paramName) ? exception.ParamName : paramName;
 
-            if (string.IsNullOrEmpty(paramName))
+            return new ValidationProblemDetails(new Dictionary<string, string[]>
             {
-                return exceptionMessage;
-            }
+                {parameterName, new []{exception.Message}}
+            });
+        }
 
-            return exception.ParamName != paramName ?
-                exceptionMessage :
-                $"{nameof(paramName)} {exception.Message}";
+        protected ValidationProblemDetails ProcessArithmeticException(ArithmeticException exception, string paramName)
+        {
+            return new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                {paramName, new []{exception.Message}}
+            });
         }
 
         protected async Task<UserRepresentation> GetUser(KeyCloakService service)

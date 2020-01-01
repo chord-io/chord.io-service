@@ -25,24 +25,9 @@ namespace Chord.IO.Service.Controllers
             this._keycloakService = keycloakService;
         }
 
-        private bool IsInvalidModel(Project model)
-        {
-            return !TryValidateModel(model, nameof(Project));
-        }
-
         private async Task<bool> IsOwner(string id)
         {
             return await this._projectService.IsOwner(id, await this.GetUser(this._keycloakService));
-        }
-
-        private BadRequestObjectResult ProcessInvalidModelState(Project model)
-        {
-            var errors = this.ModelState
-                .Where(x => x.Value.Errors.Count > 0)
-                .SelectMany(x => x.Value.Errors)
-                .ToList();
-
-            return this.BadRequest(errors);
         }
 
         private async Task<bool> IsProjectExist(Project model)
@@ -59,25 +44,20 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost]
         [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CreatedAtActionResult), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Create([FromBody] ProjectDto dto)
         {
+            
+            var user = await this.GetUser(this._keycloakService);
             var model = dto.ToModelObject();
-
-            if (this.IsInvalidModel(model))
-            {
-                return this.ProcessInvalidModelState(model);
-            }
+            model.AuthorId = user.Id;
 
             if (await this.IsProjectExist(model))
             {
-                return this.Conflict($"project <{model.Name}> is already exist");
+                return this.Conflict($"project is already exist");
             }
-
-            var user = await this.GetUser(this._keycloakService);
-            model.AuthorId = user.Id;
 
             await this._projectService.Create(model);
             return this.CreatedAtAction("GetById", new {id = model.Id}, model);
@@ -86,31 +66,25 @@ namespace Chord.IO.Service.Controllers
         [HttpPut("{id:length(24)}")]
         [SwaggerOperation(OperationId = "Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(string id, [FromBody] ProjectDto dto)
-        {
+        { 
+
+            var user = await this.GetUser(this._keycloakService);
             var model = dto.ToModelObject();
+            model.AuthorId = user.Id;
 
-            if (this.IsInvalidModel(model))
+            if (!await this.IsProjectExist(model))
             {
-                return this.ProcessInvalidModelState(model);
-            }
-
-            var isExist = await this._projectService.IsExist(x => x.Id == id);
-
-            if (isExist == false)
-            {
-                return this.NotFound($"project <{id}> not found");
+                return this.Conflict("project is already exist");
             }
 
             if (!await this.IsOwner(id))
             {
-                return this.Forbid($"user is not related to this project <{id}>");
+                return this.StatusCode(StatusCodes.Status403Forbidden, "user is not related to this project");
             }
-
-            var user = await this.GetUser(this._keycloakService);
-            model.AuthorId = user.Id;
 
             await this._projectService.Update(id, model);
             return this.NoContent();
@@ -119,20 +93,20 @@ namespace Chord.IO.Service.Controllers
         [HttpDelete("{id:length(24)}")]
         [SwaggerOperation(OperationId = "Delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> Delete(string id)
         {
             var isExist = await this._projectService.IsExist(x => x.Id == id);
 
             if (isExist == false)
             {
-                return this.NotFound($"project <{id}> not found");
+                return this.NotFound($"project not found");
             }
 
             if (!await this.IsOwner(id))
             {
-                return this.Forbid($"user is not related to this project <{id}>");
+                return this.StatusCode(StatusCodes.Status403Forbidden, "user is not related to this project");
             }
 
             await this._projectService.Delete(id);
@@ -141,20 +115,21 @@ namespace Chord.IO.Service.Controllers
 
         [HttpGet("by-id/{id:length(24)}")]
         [SwaggerOperation(OperationId = "GetById")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Project), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Project>> GetById(string id)
         {
             var model = await this._projectService.GetBy(x => x.Id == id);
 
             if (model is null)
             {
-                return this.NotFound($"project <{id}> not found");
+                return this.NotFound("project not found");
             }
 
             if (!await this.IsOwner(id))
             {
-                return this.Forbid($"user is not related to this project <{id}>");
+                return this.StatusCode(StatusCodes.Status403Forbidden, "user is not related to this project");
             }
 
             return this.Ok(model);
@@ -162,8 +137,8 @@ namespace Chord.IO.Service.Controllers
 
         [HttpGet("all/by-author/{authorId:length(24)}")]
         [SwaggerOperation(OperationId = "GetAllByAuthor")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(List<Project>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<Project>>> GetAllByAuthor()
         {
             var user = await this.GetUser(this._keycloakService);
@@ -172,7 +147,7 @@ namespace Chord.IO.Service.Controllers
 
             if (models is null)
             {
-                return this.NotFound($"projects related to author <{user.Id}> not found");
+                return this.NotFound("projects related to author not found");
             }
 
             return this.Ok(models);

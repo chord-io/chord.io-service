@@ -30,9 +30,9 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost]
         [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(UserRepresentation), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserRepresentation>> Create([FromBody] UserDto dto)
         {
             var user = new UserRepresentation
@@ -61,7 +61,7 @@ namespace Chord.IO.Service.Controllers
 
             if (!result2.Any())
             {
-                return this.NotFound();
+                return this.NotFound("user created but cannot be found");
             }
 
             return this.Ok(result2.Single());
@@ -71,8 +71,9 @@ namespace Chord.IO.Service.Controllers
         [HttpPut("{id}")]
         [SwaggerOperation(OperationId = "Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(string id, [FromBody] UserDto dto)
         {
             var currentUser = await this.GetUser(this._keyCloakService);
@@ -94,7 +95,7 @@ namespace Chord.IO.Service.Controllers
 
             if (currentUser.Id != id)
             {
-                return this.Unauthorized();
+                return this.Unauthorized("authenticated user trying to update another user");
             }
 
             var result = await this._keyCloakService.UpdateUser(id, user);
@@ -104,22 +105,22 @@ namespace Chord.IO.Service.Controllers
                 return this.NoContent();
             }
 
-            return this.BadRequest();
+            return this.StatusCode((int)StatusCodes.Status403Forbidden, "cannot update user");
         }
 
         [Authorize]
         [HttpDelete("{id}")]
         [SwaggerOperation(OperationId = "Delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Delete(string id)
         {
             var currentUser = await this.GetUser(this._keyCloakService);
 
             if (currentUser.Id != id)
             {
-                return this.Unauthorized();
+                return this.Unauthorized("authenticated user trying to delete another user");
             }
 
             var result = await this._keyCloakService.DeleteUser(id);
@@ -130,7 +131,7 @@ namespace Chord.IO.Service.Controllers
                 return this.NoContent();
             }
 
-            return this.BadRequest();
+            return this.StatusCode((int)StatusCodes.Status403Forbidden, "cannot delete user");
         }
     }
 }

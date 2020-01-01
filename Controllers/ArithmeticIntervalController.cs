@@ -19,7 +19,7 @@ namespace Chord.IO.Service.Controllers
         #region Utils
         [HttpGet("look-up-table")]
         [SwaggerOperation(OperationId = "GetLookUpTable")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IReadOnlyDictionary<uint, IReadOnlyDictionary<uint, IntervalQuality>>),StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyDictionary<uint, IReadOnlyDictionary<uint, IntervalQuality>>>> GetLookUpTable()
         {
             return await Task<ActionResult<IReadOnlyDictionary<uint, IReadOnlyDictionary<uint, IntervalQuality>>>>.Factory.StartNew(() => this.Ok(Interval.LookUpTable));
@@ -29,9 +29,9 @@ namespace Chord.IO.Service.Controllers
         #region Creations
         [HttpPost("from-degree-and-quality")]
         [SwaggerOperation(OperationId = "FromDegreeAndQuality")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IntervalDto>> FromDegreeAndQuality([FromBody] IntervalDto dto)
+        [ProducesResponseType(typeof(IntervalDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IntervalDto>> FromDegreeAndQuality([FromBody] DegreeAndQualityIntervalDto dto)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
             {
@@ -40,18 +40,18 @@ namespace Chord.IO.Service.Controllers
                     var interval = Interval.FromDegreeAndQuality(dto.Degree, dto.Quality);
                     return this.Ok(IntervalDto.FromModelObject(interval));
                 }
-                catch (Exception exception)
+                catch (ArgumentException exception)
                 {
-                    return this.BadRequest(exception.Message);
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
 
         [HttpPost("from-semitones-and-quality")]
         [SwaggerOperation(OperationId = "FromSemitonesAndQuality")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IntervalDto>> FromSemitonesAndQuality([FromBody] IntervalDto dto)
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IntervalDto>> FromSemitonesAndQuality([FromBody] SemitonesAndQualityIntervalDto dto)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
             {
@@ -60,18 +60,18 @@ namespace Chord.IO.Service.Controllers
                     var interval = Interval.FromSemitonesAndQuality(dto.Semitones, dto.Quality);
                     return this.Ok(IntervalDto.FromModelObject(interval));
                 }
-                catch (Exception exception)
+                catch (ArgumentException exception)
                 {
-                    return this.BadRequest(exception.Message);
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
 
         [HttpPost("from-degree-and-semitones")]
         [SwaggerOperation(OperationId = "FromDegreeAndSemitones")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IntervalDto>> FromDegreeAndSemitones([FromBody] IntervalDto dto)
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IntervalDto>> FromDegreeAndSemitones([FromBody] DegreeAndSemitonesIntervalDto dto)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
             {
@@ -80,17 +80,17 @@ namespace Chord.IO.Service.Controllers
                     var interval = Interval.FromDegreeAndSemitones(dto.Degree, dto.Semitones);
                     return this.Ok(IntervalDto.FromModelObject(interval));
                 }
-                catch (Exception exception)
+                catch (ArgumentException exception)
                 {
-                    return this.BadRequest(exception.Message);
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
 
         [HttpPost("from-notes")]
         [SwaggerOperation(OperationId = "FromNotes")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromNotes([FromBody] NotePairDto dto)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
@@ -100,9 +100,9 @@ namespace Chord.IO.Service.Controllers
                     var interval = Interval.FromNotes(dto.A.ToModelObject(), dto.B.ToModelObject());
                     return this.Ok(IntervalDto.FromModelObject(interval));
                 }
-                catch (Exception exception)
+                catch (ArgumentException exception)
                 {
-                    return this.BadRequest(exception.Message);
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
@@ -111,8 +111,8 @@ namespace Chord.IO.Service.Controllers
         #region Representations
         [HttpPost("from-string/{interval}")]
         [SwaggerOperation(OperationId = "FromString")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromString(string interval)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
@@ -124,23 +124,23 @@ namespace Chord.IO.Service.Controllers
                 }
                 catch (ArgumentException exception)
                 {
-                    return this.BadRequest(this.ProcessArgumentException(exception, null));
+                    return this.BadRequest(this.ProcessArgumentException(exception, interval));
                 }
             });
         }
 
         [HttpPost("to-string/{format}")]
         [SwaggerOperation(OperationId = "ToString")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<string>> ToString([FromBody] IntervalDto dto, IntervalFormat format)
         {
             return await Task<ActionResult<string>>.Factory.StartNew(() =>
             {
                 try
                 {
-                    var Interval = dto.ToModelObject();
-                    var str = Interval.ToString(format);
+                    var interval = dto.ToModelObject();
+                    var str = interval.ToString(format);
                     return this.Ok(str);
                 }
                 catch (ArgumentException exception)
@@ -154,8 +154,8 @@ namespace Chord.IO.Service.Controllers
         #region Conversions
         [HttpPost("from-integral/{index}")]
         [SwaggerOperation(OperationId = "FromIntegral")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> FromIntegral(uint index)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
@@ -167,15 +167,15 @@ namespace Chord.IO.Service.Controllers
                 }
                 catch (ArgumentException exception)
                 {
-                    return this.BadRequest(this.ProcessArgumentException(exception, nameof(index)));
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
 
         [HttpPost("to-integral")]
         [SwaggerOperation(OperationId = "ToIntegral")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(uint), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<uint>> ToIntegral([FromBody] IntervalDto dto)
         {
             return await Task<ActionResult<uint>>.Factory.StartNew(() =>
@@ -197,8 +197,8 @@ namespace Chord.IO.Service.Controllers
         #region Transformations
         [HttpPost("invert")]
         [SwaggerOperation(OperationId = "Invert")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IntervalDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IntervalDto>> Invert([FromBody] IntervalDto dto)
         {
             return await Task<ActionResult<IntervalDto>>.Factory.StartNew(() =>
@@ -209,17 +209,17 @@ namespace Chord.IO.Service.Controllers
                     interval = interval.Invert();
                     return this.Ok(IntervalDto.FromModelObject(interval));
                 }
-                catch (Exception exception)
+                catch (ArgumentException exception)
                 {
-                    return this.BadRequest(exception.Message);
+                    return this.BadRequest(this.ProcessArgumentException(exception, null));
                 }
             });
         }
 
         [HttpPost("to-note/{root}")]
         [SwaggerOperation(OperationId = "ToNote")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NoteDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NoteDto>> ToNote([FromBody] IntervalDto dto, string root)
         {
             return await Task<ActionResult<NoteDto>>.Factory.StartNew(() =>

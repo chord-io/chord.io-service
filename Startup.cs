@@ -94,7 +94,8 @@ namespace Chord.IO.Service
 
             });
 
-            services.AddSwaggerGenNewtonsoftSupport();
+            // Uncomment this line when fixed
+            //services.AddSwaggerGenNewtonsoftSupport();
 
             services.AddAuthentication(options =>
             {
