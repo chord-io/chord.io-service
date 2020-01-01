@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Swashbuckle.AspNetCore.Filters;
@@ -66,6 +67,10 @@ namespace Chord.IO.Service
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.AddSwaggerGen(options =>
