@@ -45,10 +45,10 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost]
         [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(typeof(HttpResponseMessage), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Project), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create([FromBody] ProjectDto dto)
+        public async Task<ActionResult<Project>> Create([FromBody] ProjectDto dto)
         {
             
             var user = await this.GetUser(this._keycloakService);
@@ -61,7 +61,7 @@ namespace Chord.IO.Service.Controllers
             }
 
             await this._projectService.Create(model);
-            return this.CreatedAtAction("GetById", new {id = model.Id}, model);
+            return model;
         }
 
         [HttpPut("{id:length(24)}")]
