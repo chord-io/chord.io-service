@@ -30,10 +30,10 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost]
         [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(typeof(UserRepresentation), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserRepresentation>> Create([FromBody] UserDto dto)
+        public async Task<ActionResult<User>> Create([FromBody] UserDto dto)
         {
             var user = new UserRepresentation
             {
@@ -64,7 +64,14 @@ namespace Chord.IO.Service.Controllers
                 return this.NotFound("user created but cannot be found");
             }
 
-            return this.Ok(result2.Single());
+            user = result2.Single();
+
+            return this.Ok(new User
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            });
         }
 
         [Authorize]

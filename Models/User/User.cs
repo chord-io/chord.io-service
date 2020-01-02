@@ -11,14 +11,18 @@ namespace Chord.IO.Service.Models.User
 {
     public class User
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("id", Required = Required.Always)]
         public string Id { get; set; }
 
+        [MinLength(5, ErrorMessage = "Value {0} require a minimum length of {1} character")]
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("keycloak_id", Required = Required.Always)]
-        public string KeycloakId { get; set; }
+        [JsonProperty("username", Required = Required.Always)]
+        public string Username { get; set; }
+
+        [EmailAddress(ErrorMessage = "Value {0} is not a valid email address")]
+        [Required(ErrorMessage = "Value {0} is required")]
+        [JsonProperty("email", Required = Required.Always)]
+        public string Email { get; set; }
     }
 }
