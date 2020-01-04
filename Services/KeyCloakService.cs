@@ -44,7 +44,7 @@ namespace Chord.IO.Service.Services
         {
             if (this._authentication is null)
             {
-                await this.AuthenticateAsAdmin();
+                this._authentication = await this.AuthenticateAsAdmin();
             }
             else if (DateTime.Now > this._authentication.ExpirationDate)
             {
