@@ -29,7 +29,7 @@ namespace Chord.IO.Service.Controllers
         [SwaggerOperation(OperationId = "SignIn")]
         [ProducesResponseType(typeof(Authentication), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AuthenticationRepresentation>> SignIn([FromBody] SignInDto dto)
+        public async Task<ActionResult<Authentication>> SignIn([FromBody] SignInDto dto)
         {
             var user = await this._keyCloakService.GetUserByUsername(dto.Username);
 
@@ -43,7 +43,9 @@ namespace Chord.IO.Service.Controllers
                 return this.BadRequest(validationError);
             }
 
-            return this.Ok(await this._keyCloakService.Authenticate(dto.Username, dto.Password));
+            var authentication = await this._keyCloakService.Authenticate(dto.Username, dto.Password);
+
+            return this.Ok(Authentication.FromRepresentation(authentication));
         }
 
         [HttpPost("sign-up")]
@@ -113,7 +115,8 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(typeof(Authentication),StatusCodes.Status200OK)]
         public async Task<ActionResult<Authentication>> Refresh([FromHeader(Name = "refresh_token")] string token)
         {
-            return this.Ok(await this._keyCloakService.Refresh(token));
+            var authentication = await this._keyCloakService.Refresh(token);
+            return this.Ok(Authentication.FromRepresentation(authentication));
         }
     }
 }
