@@ -10,6 +10,7 @@ using Chord.IO.Service.Services;
 using IO.Swagger.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Refit;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chord.IO.Service.Controllers
@@ -31,9 +32,11 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Authentication>> SignIn([FromBody] SignInDto dto)
         {
-            var user = await this._keyCloakService.GetUserByUsername(dto.Username);
-
-            if (!user.Any())
+            try
+            {
+                await this._keyCloakService.GetUserByUsername(dto.Username);
+            }
+            catch (ApiException)
             {
                 var validationError = new ValidationProblemDetails(new Dictionary<string, string[]>
                 {
@@ -43,9 +46,20 @@ namespace Chord.IO.Service.Controllers
                 return this.BadRequest(validationError);
             }
 
-            var authentication = await this._keyCloakService.Authenticate(dto.Username, dto.Password);
+            try
+            {
+                var authentication = await this._keyCloakService.Authenticate(dto.Username, dto.Password);
+                return this.Ok(Authentication.FromRepresentation(authentication));
+            }
+            catch (ApiException)
+            {
+                var validationError = new ValidationProblemDetails(new Dictionary<string, string[]>
+                {
+                    {"Password", new []{"password is not valid"}}
+                });
 
-            return this.Ok(Authentication.FromRepresentation(authentication));
+                return this.BadRequest(validationError);
+            }
         }
 
         [HttpPost("sign-up")]
