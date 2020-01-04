@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Keycloak
 {
-    public class TokenRepresentation
+    public class AuthenticationRepresentation
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

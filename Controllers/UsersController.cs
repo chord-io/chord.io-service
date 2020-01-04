@@ -15,6 +15,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chord.IO.Service.Controllers
 {
+    [Authorize]
     [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -28,53 +29,6 @@ namespace Chord.IO.Service.Controllers
             this._projectService = projectService;
         }
 
-        [HttpPost]
-        [SwaggerOperation(OperationId = "Create")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<User>> Create([FromBody] UserDto dto)
-        {
-            var user = new UserRepresentation
-            {
-                Username = dto.Username,
-                Email = dto.Email,
-                Enabled = true,
-                Credentials = new List<CredentialRepresentation>
-                {
-                    new CredentialRepresentation
-                    {
-                        Value = dto.Password,
-                        Type = "password"
-                    }
-                }
-            };
-
-            var result = await this._keyCloakService.CreateUser(user);
-
-            if (!result.IsSuccessStatusCode)
-            {
-                return this.StatusCode((int)result.StatusCode, result.ReasonPhrase);
-            }
-
-            var result2 = await this._keyCloakService.GetUserByEmail(user.Email);
-
-            if (!result2.Any())
-            {
-                return this.NotFound("user created but cannot be found");
-            }
-
-            user = result2.Single();
-
-            return this.Ok(new User
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
-            });
-        }
-
-        [Authorize]
         [HttpPut("{id}")]
         [SwaggerOperation(OperationId = "Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -115,7 +69,6 @@ namespace Chord.IO.Service.Controllers
             return this.StatusCode((int)StatusCodes.Status403Forbidden, "cannot update user");
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
         [SwaggerOperation(OperationId = "Delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

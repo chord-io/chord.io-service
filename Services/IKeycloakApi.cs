@@ -14,11 +14,11 @@ namespace Chord.IO.Service.Services
     {
         [Headers("Content-Type: application/x-www-form-urlencoded")]
         [Post("/realms/{realm}/protocol/openid-connect/token")]
-        Task<TokenRepresentation> Authenticate(string realm, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> data);
+        Task<AuthenticationRepresentation> Authenticate(string realm, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> data);
 
         [Headers("Content-Type: application/x-www-form-urlencoded")]
         [Post("/realms/{realm}/protocol/openid-connect/token")]
-        Task<TokenRepresentation> Refresh(string realm, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> data);
+        Task<AuthenticationRepresentation> Refresh(string realm, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> data);
 
         [Headers("Content-Type: application/x-www-form-urlencoded", "Authorization: Bearer")]
         [Post("/realms/{realm}/protocol/openid-connect/logout")]
@@ -31,6 +31,10 @@ namespace Chord.IO.Service.Services
         [Headers("Authorization: Bearer")]
         [Get("/admin/realms/{realm}/users")]
         Task<List<UserRepresentation>> GetUserByEmail(string realm, string email);
+
+        [Headers("Authorization: Bearer")]
+        [Get("/admin/realms/{realm}/users")]
+        Task<List<UserRepresentation>> GetUserByUsername(string realm, string username);
 
         [Headers("Authorization: Bearer")]
         [Post("/admin/realms/{realm}/users")]

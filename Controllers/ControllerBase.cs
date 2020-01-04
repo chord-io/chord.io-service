@@ -35,7 +35,7 @@ namespace Chord.IO.Service.Controllers
 
         protected async Task<UserRepresentation> GetUser(KeyCloakService service)
         {
-            var tokenString = await HttpContext.GetTokenAsync("Bearer", "access_token");
+            var tokenString = await this.HttpContext.GetTokenAsync("Bearer", "access_token");
             var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
             var user = await service.GetUser(token.Subject);
             return user;
