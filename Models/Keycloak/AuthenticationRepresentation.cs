@@ -32,8 +32,10 @@ namespace Chord.IO.Service.Models.Keycloak
         [JsonProperty("scope")]
         public string Scope { get; set; }
 
+        [JsonProperty("expiration_date")]
         public DateTime ExpirationDate { get; set; }
 
+        [JsonProperty("refresh_expiration_date")]
         public DateTime RefreshExpirationDate { get; set; }
     }
 }

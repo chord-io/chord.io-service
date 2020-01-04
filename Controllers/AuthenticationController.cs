@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chord.IO.Service.Dto;
+using Chord.IO.Service.Models.Authentication;
 using Chord.IO.Service.Models.Keycloak;
 using Chord.IO.Service.Models.User;
 using Chord.IO.Service.Services;
@@ -26,7 +27,7 @@ namespace Chord.IO.Service.Controllers
 
         [HttpPost("sign-in")]
         [SwaggerOperation(OperationId = "SignIn")]
-        [ProducesResponseType(typeof(AuthenticationRepresentation), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Authentication), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthenticationRepresentation>> SignIn([FromBody] SignInDto dto)
         {
@@ -109,8 +110,8 @@ namespace Chord.IO.Service.Controllers
 
         [HttpGet("refresh")]
         [SwaggerOperation(OperationId = "Refresh")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<AuthenticationRepresentation>> Refresh([FromHeader(Name = "refresh_token")] string token)
+        [ProducesResponseType(typeof(Authentication),StatusCodes.Status200OK)]
+        public async Task<ActionResult<Authentication>> Refresh([FromHeader(Name = "refresh_token")] string token)
         {
             return this.Ok(await this._keyCloakService.Refresh(token));
         }
