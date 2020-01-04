@@ -32,11 +32,9 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Authentication>> SignIn([FromBody] SignInDto dto)
         {
-            try
-            {
-                await this._keyCloakService.GetUserByUsername(dto.Username);
-            }
-            catch (ApiException)
+            var user = await this._keyCloakService.GetUserByUsername(dto.Username);
+
+            if (!user.Any())
             {
                 var validationError = new ValidationProblemDetails(new Dictionary<string, string[]>
                 {
