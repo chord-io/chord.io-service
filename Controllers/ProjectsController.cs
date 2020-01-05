@@ -146,7 +146,7 @@ namespace Chord.IO.Service.Controllers
 
             var models = await this._projectService.GetAllBy(x => x.AuthorId == user.Id);
 
-            if (models is null)
+            if (models is null || models.Count == 0)
             {
                 return this.NotFound("projects related to author not found");
             }
