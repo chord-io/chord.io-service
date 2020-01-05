@@ -42,13 +42,9 @@ namespace Chord.IO.Service.Services
 
         private async Task<string> GetToken()
         {
-            if (this._authentication is null)
+            if (this._authentication is null || DateTime.Now > this._authentication.ExpirationDate)
             {
                 this._authentication = await this.AuthenticateAsAdmin();
-            }
-            else if (DateTime.Now > this._authentication.ExpirationDate)
-            {
-                this._authentication = await this.Refresh(this._authentication.RefreshToken);
             }
 
             return this._authentication.AccessToken;
