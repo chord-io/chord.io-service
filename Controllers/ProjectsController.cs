@@ -136,7 +136,7 @@ namespace Chord.IO.Service.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet("all/by-author/{authorId:length(24)}")]
+        [HttpGet("all/by-author")]
         [SwaggerOperation(OperationId = "GetAllByAuthor")]
         [ProducesResponseType(typeof(List<Project>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
