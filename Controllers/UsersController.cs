@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Chord.IO.Service.Attributes;
 using Chord.IO.Service.Dto;
 using Chord.IO.Service.Models.User;
 using Chord.IO.Service.Services;
@@ -35,9 +36,10 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Update(string id, [FromBody] UserDto dto)
+        public async Task<ActionResult> Update([NotEmpty] Guid id, [FromBody] UserDto dto)
         {
             var currentUser = await this.GetUser(this._keyCloakService);
+            var idString = id.ToString();
 
             var user = new UserRepresentation
             {
@@ -54,12 +56,12 @@ namespace Chord.IO.Service.Controllers
                 }
             };
 
-            if (currentUser.Id != id)
+            if (currentUser.Id != idString)
             {
                 return this.Unauthorized("authenticated user trying to update another user");
             }
 
-            var result = await this._keyCloakService.UpdateUser(id, user);
+            var result = await this._keyCloakService.UpdateUser(idString, user);
 
             if (result.IsSuccessStatusCode)
             {
@@ -74,20 +76,21 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete([NotEmpty] Guid id)
         {
             var currentUser = await this.GetUser(this._keyCloakService);
+            var idString = id.ToString();
 
-            if (currentUser.Id != id)
+            if (currentUser.Id != idString)
             {
                 return this.Unauthorized("authenticated user trying to delete another user");
             }
 
-            var result = await this._keyCloakService.DeleteUser(id);
+            var result = await this._keyCloakService.DeleteUser(idString);
 
             if (result.IsSuccessStatusCode)
             {
-                await this._projectService.DeleteAllByAuthor(id);
+                await this._projectService.DeleteAllByAuthor(idString);
                 return this.NoContent();
             }
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Hierarchy
@@ -13,10 +12,8 @@ namespace Chord.IO.Service.Models.Hierarchy
         [JsonProperty("name", Required = Required.Always)]
         public string Name { get; set; }
 
-        [MinLength(24, ErrorMessage = "Value {0} require a minimum length of {1} character")]
-        [MaxLength(24, ErrorMessage = "Value {0} require a maximum length of {1} character")]
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("author_id", Required = Required.Always)]
+        [JsonIgnore]
         public string AuthorId { get; set; }
 
         [Range(30, 360, ErrorMessage = "Value for {0} must be between {1} and {2}")]

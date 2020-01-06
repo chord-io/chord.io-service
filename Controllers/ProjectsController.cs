@@ -1,4 +1,5 @@
-﻿using Chord.IO.Service.Dto;
+﻿using System;
+using Chord.IO.Service.Dto;
 using Chord.IO.Service.Models.Hierarchy;
 using Chord.IO.Service.Services;
 using Microsoft.AspNetCore.Http;
@@ -50,7 +51,6 @@ namespace Chord.IO.Service.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Project>> Create([FromBody] ProjectDto dto)
         {
-            
             var user = await this.GetUser(this._keycloakService);
             var model = dto.ToModelObject();
             model.AuthorId = user.Id;
@@ -79,7 +79,7 @@ namespace Chord.IO.Service.Controllers
 
             if (!await this.IsProjectExist(model))
             {
-                return this.Conflict("project is already exist");
+                return this.NotFound("project not found");
             }
 
             if (!await this.IsOwner(id))
