@@ -15,6 +15,7 @@ namespace Chord.IO.Service.Models.Hierarchy
 
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
+        [BsonIgnoreIfDefault]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("id", Required = Required.Always)]
         public string Id { get; set; }
