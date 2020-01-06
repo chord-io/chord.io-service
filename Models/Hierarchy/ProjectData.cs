@@ -12,7 +12,6 @@ namespace Chord.IO.Service.Models.Hierarchy
         [JsonProperty("name", Required = Required.Always)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Value {0} is required")]
         [JsonIgnore]
         public string AuthorId { get; set; }
 
