@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Hierarchy
@@ -12,7 +13,7 @@ namespace Chord.IO.Service.Models.Hierarchy
     {
         public static readonly string DuplicateEntryKeyword = "duplicate-entry";
 
-        [BsonId]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("id", Required = Required.Always)]
