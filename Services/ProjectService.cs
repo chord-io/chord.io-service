@@ -28,10 +28,7 @@ namespace Chord.IO.Service.Services
 
         public async Task<bool> Update(string id, Project document)
         {
-            var bsonDocument = document.ToBsonDocument();
-            bsonDocument.Remove("Id");
-            var filter = Builders<Project>.Filter.Eq(x => x.Id, id);
-            var result = await this._projects.UpdateOneAsync(filter, bsonDocument);
+            var result = await this._projects.ReplaceOneAsync(x => x.Id == id, document);
             return result.ModifiedCount == 1;
         }
 
