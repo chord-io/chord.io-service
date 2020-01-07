@@ -57,7 +57,7 @@ namespace Chord.IO.Service.Controllers
 
             if (await this.IsProjectExist(model))
             {
-                return this.Conflict($"project is already exist");
+                return this.Conflict("project is already exist");
             }
 
             await this._projectService.Create(model);
@@ -77,9 +77,9 @@ namespace Chord.IO.Service.Controllers
             var model = dto.ToModelObject();
             model.AuthorId = user.Id;
 
-            if (!await this.IsProjectExist(model))
+            if (await this.IsProjectExist(model))
             {
-                return this.NotFound("project not found");
+                return this.Conflict("project is already exist");
             }
 
             if (!await this.IsOwner(id))
@@ -102,7 +102,7 @@ namespace Chord.IO.Service.Controllers
 
             if (isExist == false)
             {
-                return this.NotFound($"project not found");
+                return this.NotFound("project not found");
             }
 
             if (!await this.IsOwner(id))
