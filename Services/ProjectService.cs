@@ -28,7 +28,9 @@ namespace Chord.IO.Service.Services
 
         public async Task<bool> Update(string id, Project document)
         {
-            var result = await this._projects.ReplaceOneAsync(x => x.Id == id, document);
+            var bsonDocument = document.ToBsonDocument();
+            bsonDocument.Remove("Id");
+            var result = await this._projects.UpdateOneAsync(x => x.Id == id, bsonDocument);
             return result.ModifiedCount == 1;
         }
 
