@@ -67,7 +67,6 @@ namespace Chord.IO.Service.Controllers
         [HttpPut("{id:length(24)}")]
         [SwaggerOperation(OperationId = "Update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(string id, [FromBody] ProjectDto dto)
@@ -77,9 +76,11 @@ namespace Chord.IO.Service.Controllers
             var model = dto.ToModelObject();
             model.AuthorId = user.Id;
 
-            if (await this.IsProjectExist(model))
+            var isExist = await this._projectService.IsExist(x => x.Id == id);
+
+            if (isExist == false)
             {
-                return this.Conflict("project is already exist");
+                return this.NotFound("project not found");
             }
 
             if (!await this.IsOwner(id))
