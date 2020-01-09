@@ -15,8 +15,7 @@ namespace Chord.IO.Service.Dto
                 AuthorId = this.AuthorId,
                 Tempo = this.Tempo,
                 IsPrivate = this.IsPrivate,
-                Tracks = this.Tracks,
-                Themes = this.Themes
+                Tracks = this.Tracks
             };
         }
 
@@ -28,8 +27,7 @@ namespace Chord.IO.Service.Dto
                 AuthorId = model.AuthorId,
                 Tempo = model.Tempo,
                 IsPrivate = model.IsPrivate,
-                Tracks = model.Tracks,
-                Themes = model.Themes
+                Tracks = model.Tracks
             };
         }
     }
