@@ -11,5 +11,10 @@ namespace Chord.IO.Service.Models.Hierarchy
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("name", Required = Required.Always)]
         public string Name { get; set; }
+
+        [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} chords")]
+        [Required(ErrorMessage = "Value {0} is required")]
+        [JsonProperty("chords", Required = Required.Always)]
+        public List<Chord> Chords { get; set; }
     }
 }

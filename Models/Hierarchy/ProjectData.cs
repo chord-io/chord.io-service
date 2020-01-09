@@ -28,10 +28,5 @@ namespace Chord.IO.Service.Models.Hierarchy
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("tracks", Required = Required.Always)]
         public List<Track> Tracks { get; set; }
-
-        [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} themes")]
-        [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("themes", Required = Required.Always)]
-        public List<Theme> Themes { get; set; }
     }
 }

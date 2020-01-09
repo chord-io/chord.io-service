@@ -35,17 +35,6 @@ namespace Chord.IO.Service.Models.Hierarchy
                 results.AddRange(duplicateTracks.Select(entry => new ValidationResult(entry, new[] {$"{nameof(this.Tracks)}.{DuplicateEntryKeyword}"})));
             }
 
-            var duplicatesThemes = this.Themes
-                .GroupBy(x => x.Name)
-                .Where(x => x.Count() > 1)
-                .Select(x => x.Key)
-                .ToList();
-
-            if (duplicatesThemes.Count > 0)
-            {
-                results.AddRange(duplicatesThemes.Select(entry => new ValidationResult(entry, new[] { $"{nameof(this.Themes)}.{DuplicateEntryKeyword}" })));
-            }
-
             return results;
         }
     }
