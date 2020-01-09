@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Hierarchy
@@ -15,5 +16,10 @@ namespace Chord.IO.Service.Models.Hierarchy
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("channel", Required = Required.Always)]
         public uint Channel { get; set; }
+
+        [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} chords")]
+        [Required(ErrorMessage = "Value {0} is required")]
+        [JsonProperty("chords", Required = Required.Always)]
+        public List<Chord> Chords { get; set; }
     }
 }
