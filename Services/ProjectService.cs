@@ -22,7 +22,6 @@ namespace Chord.IO.Service.Services
 
         public async Task Create(Project document)
         {
-            document.Id = ObjectId.GenerateNewId().ToString();
             await this._projects.InsertOneAsync(document);
         }
 
@@ -72,8 +71,13 @@ namespace Chord.IO.Service.Services
 
         public async Task<bool> IsOwner(string id, UserRepresentation user)
         {
-            var project = await this._projects.FindAsync(x => x.Id == id && x.AuthorId == user.Id);
-            return project.Any();
+            var projects = await this._projects.FindAsync(x => x.Id == id && x.AuthorId == user.Id);
+            return projects.Any();
+        }
+
+        public async Task<long> CountBy(Expression<Func<Project, bool>> filter)
+        {
+            return await this._projects.CountDocumentsAsync(filter);
         }
     }
 }

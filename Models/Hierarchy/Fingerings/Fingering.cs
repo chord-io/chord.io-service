@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
-using System.Text.Json.Serialization;
 using Chord.IO.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -10,9 +8,9 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy
+namespace Chord.IO.Service.Models.Hierarchy.Fingerings
 {
-    public class Project : ProjectData, IValidatableObject
+    public class Fingering : FingeringData
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]

@@ -10,7 +10,6 @@ namespace Chord.IO.Service.Dto
         {
             return new Project
             {
-                Id = ObjectId.Empty.ToString(),
                 Name = this.Name,
                 AuthorId = this.AuthorId,
                 Tempo = this.Tempo,

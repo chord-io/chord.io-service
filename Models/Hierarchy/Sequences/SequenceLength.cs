@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy
+namespace Chord.IO.Service.Models.Hierarchy.Sequences
 {
-    public class ChordLength : IValidatableObject
+    public class SequenceLength : IValidatableObject
     {
         [Range(0, uint.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
@@ -28,7 +27,10 @@ namespace Chord.IO.Service.Models.Hierarchy
 
             if (this.Start >= this.End)
             {
-                results.Add(new ValidationResult($"chord start position cannot be equal or greater than end position", new[] { nameof(this.Start), nameof(this.End)}));
+                results.Add(new ValidationResult(
+                    "start position cannot be equal or greater than end position", 
+                    new[] { nameof(this.Start), nameof(this.End)}
+                ));
             }
 
             return results;

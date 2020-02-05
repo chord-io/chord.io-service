@@ -5,9 +5,9 @@ using System.Linq;
 using Chord.IO.Service.Models.Arithmetic;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy
+namespace Chord.IO.Service.Models.Hierarchy.Sequences
 {
-    public class Chord : IValidatableObject
+    public class ChordSequence : MidiSequence, IValidatableObject
     {
         [Range(0, 127, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
@@ -18,14 +18,6 @@ namespace Chord.IO.Service.Models.Hierarchy
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("intervals", Required = Required.Always)]
         public List<string> Intervals { get; set; }
-
-        [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("length", Required = Required.Always)]
-        public ChordLength Length { get; set; }
-
-        [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("fingering", Required = Required.Always)]
-        public Fingering Fingering { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -41,10 +33,10 @@ namespace Chord.IO.Service.Models.Hierarchy
                 }
                 catch (Exception exception) when (exception is ArgumentException || exception is InvalidOperationException)
                 {
-                    results.Add(new ValidationResult(exception.Message, new[] { interval }));
+                    results.Add(new ValidationResult(exception.Message, new[] { nameof(this.Intervals) }));
                 }
             }
-            
+
             var inputIntervals = intervals
                 .Select(x => x.ToIntegral())
                 .ToList();
@@ -52,7 +44,10 @@ namespace Chord.IO.Service.Models.Hierarchy
 
             if (!expectedIntervals.SequenceEqual(inputIntervals))
             {
-                results.Add(new ValidationResult("must be ordered", new[] { nameof(this.Intervals) }));
+                results.Add(new ValidationResult(
+                    "intervals must be ordered", 
+                    new[] { nameof(this.Intervals) }
+                ));
             }
 
             return results;

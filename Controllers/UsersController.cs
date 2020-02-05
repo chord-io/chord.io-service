@@ -23,11 +23,13 @@ namespace Chord.IO.Service.Controllers
     {
         private readonly KeyCloakService _keyCloakService;
         private readonly ProjectService _projectService;
+        private readonly FingeringService _fingeringService;
 
-        public UsersController(KeyCloakService keyCloakService, ProjectService projectService)
+        public UsersController(KeyCloakService keyCloakService, ProjectService projectService, FingeringService fingeringService)
         {
             this._keyCloakService = keyCloakService;
             this._projectService = projectService;
+            this._fingeringService = fingeringService;
         }
 
         [HttpPut("{id}")]
@@ -91,6 +93,8 @@ namespace Chord.IO.Service.Controllers
             if (result.IsSuccessStatusCode)
             {
                 await this._projectService.DeleteAllByAuthor(idString);
+                await this._fingeringService.UpdateAllWhenAuthorIsDeleted(idString);
+
                 return this.NoContent();
             }
 

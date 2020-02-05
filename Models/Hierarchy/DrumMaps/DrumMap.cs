@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
-using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Chord.IO.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -10,9 +11,9 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy
+namespace Chord.IO.Service.Models.Hierarchy.DrumMaps
 {
-    public class Project : ProjectData, IValidatableObject
+    public class DrumMap : DrumMapData
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]

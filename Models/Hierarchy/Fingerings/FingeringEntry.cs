@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy
+namespace Chord.IO.Service.Models.Hierarchy.Fingerings
 {
     public class FingeringEntry
     {
