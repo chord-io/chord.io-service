@@ -29,8 +29,8 @@ namespace Chord.IO.Service.Models.Hierarchy
         public uint Tempo { get; set; }
 
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("is_private", Required = Required.Always)]
-        public bool IsPrivate { get; set; }
+        [JsonProperty("private", Required = Required.Always)]
+        public bool Private { get; set; }
 
         [MaxLength(16, ErrorMessage = "Value {0} require a maximum length of {1} tracks")]
         [Required(ErrorMessage = "Value {0} is required")]
