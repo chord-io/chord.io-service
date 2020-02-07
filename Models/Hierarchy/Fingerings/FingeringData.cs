@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Chord.IO.Service.Enums;
 using Chord.IO.Service.Services;
 using Chord.IO.Service.Utils;
 using Microsoft.AspNetCore.Http;

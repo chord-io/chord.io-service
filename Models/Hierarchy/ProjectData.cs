@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Chord.IO.Service.Enums;
 using Chord.IO.Service.Models.Hierarchy.Tracks;
 using Chord.IO.Service.Services;
 using Chord.IO.Service.Utils;
@@ -29,8 +30,8 @@ namespace Chord.IO.Service.Models.Hierarchy
         public uint Tempo { get; set; }
 
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("private", Required = Required.Always)]
-        public bool Private { get; set; }
+        [JsonProperty("visibility", Required = Required.Always)]
+        public Visibility Visibility { get; set; }
 
         [MaxLength(16, ErrorMessage = "Value {0} require a maximum length of {1} tracks")]
         [Required(ErrorMessage = "Value {0} is required")]

@@ -13,7 +13,7 @@ namespace Chord.IO.Service.Dto
                 Name = this.Name,
                 AuthorId = this.AuthorId,
                 Tempo = this.Tempo,
-                Private = this.Private,
+                Visibility = this.Visibility,
                 Tracks = this.Tracks
             };
         }
@@ -25,7 +25,7 @@ namespace Chord.IO.Service.Dto
                 Name = model.Name,
                 AuthorId = model.AuthorId,
                 Tempo = model.Tempo,
-                Private = model.Private,
+                Visibility = model.Visibility,
                 Tracks = model.Tracks
             };
         }
