@@ -100,7 +100,7 @@ namespace Chord.IO.Service
                     }
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-                options.AddTypes(new []
+                options.AddTypes(new[]
                 {
                     typeof(Track),
                     typeof(Sequence)

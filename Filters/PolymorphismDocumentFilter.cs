@@ -53,6 +53,7 @@ namespace Chord.IO.Service.Filters
 
         public void Apply(OpenApiDocument document, DocumentFilterContext context)
         {
+            document.
             foreach (var type in this._types)
             {
                 RegisterSubClasses(context.SchemaRepository, type);

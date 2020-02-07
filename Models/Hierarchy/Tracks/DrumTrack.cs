@@ -24,7 +24,7 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
             if (count == 0)
             {
                 results.Add(new ValidationResult(
-                    "drum must be exist",
+                    "drum map must be exist",
                     new[] { nameof(this.DrumMapId) }
                 ));
             }
