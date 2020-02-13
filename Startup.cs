@@ -4,18 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Swashbuckle.AspNetCore.Filters;
+using System;
+using Chord.IO.Service.Extensions;
+using Chord.IO.Service.Models.Hierarchy.Sequences;
+using Chord.IO.Service.Models.Hierarchy.Tracks;
 
 namespace Chord.IO.Service
 {
@@ -101,7 +100,11 @@ namespace Chord.IO.Service
                     }
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-
+                options.AddTypes(new[]
+                {
+                    typeof(Track),
+                    typeof(Sequence)
+                });
             });
 
             services.AddSwaggerGenNewtonsoftSupport();
@@ -151,7 +154,7 @@ namespace Chord.IO.Service
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "/help/{documentName}/swagger.json";
-                options.SerializeAsV2 = true;
+                options.SerializeAsV2 = false;
             });
 
             app.UseSwaggerUI(options =>

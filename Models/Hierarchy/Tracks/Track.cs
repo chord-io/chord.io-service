@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.Serialization;
 using Chord.IO.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Hierarchy.Tracks

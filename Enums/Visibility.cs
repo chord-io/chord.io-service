@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chord.IO.Service.Models.Hierarchy.Fingerings
+namespace Chord.IO.Service.Enums
 {
-    public enum FingeringType
+    public enum Visibility
     {
-        Chord,
-        Drum
+        Public,
+        Private
     }
 }
