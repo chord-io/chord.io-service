@@ -14,7 +14,8 @@ namespace Chord.IO.Service.Dto
                 AuthorId = this.AuthorId,
                 Tempo = this.Tempo,
                 Visibility = this.Visibility,
-                Tracks = this.Tracks
+                Tracks = this.Tracks,
+                Themes = this.Themes
             };
         }
 
@@ -26,7 +27,8 @@ namespace Chord.IO.Service.Dto
                 AuthorId = model.AuthorId,
                 Tempo = model.Tempo,
                 Visibility = model.Visibility,
-                Tracks = model.Tracks
+                Tracks = model.Tracks,
+                Themes = model.Themes
             };
         }
     }
