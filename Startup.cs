@@ -22,8 +22,6 @@ namespace Chord.IO.Service
     {
         public Startup(IHostEnvironment environment)
         {
-            
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
                 .AddEnvironmentVariables();
@@ -133,6 +131,8 @@ namespace Chord.IO.Service
                     }
                 };
             });
+
+            services.AddHttpContextAccessor();
 
             MongoConnectionSettings.Configure(Configuration, services);
             KeycloakSettings.Configure(Configuration, services);
