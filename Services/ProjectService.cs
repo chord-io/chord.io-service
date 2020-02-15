@@ -22,6 +22,7 @@ namespace Chord.IO.Service.Services
 
         public async Task Create(Project document)
         {
+            document.Id = ObjectId.GenerateNewId().ToString();
             await this._projects.InsertOneAsync(document);
         }
 
