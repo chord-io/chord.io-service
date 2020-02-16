@@ -14,6 +14,8 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
     [JsonConverter(typeof(JsonSubtypes))]
     [JsonSubtypes.KnownSubTypeWithProperty(typeof(MidiTrack), nameof(MidiTrack.Channel))]
     [JsonSubtypes.KnownSubTypeWithProperty(typeof(DrumTrack), nameof(DrumTrack.DrumMapId))]
+    [BsonKnownTypes(typeof(MidiTrack))]
+    [BsonKnownTypes(typeof(DrumTrack))]
     public abstract class Track
     {
         [MinLength(5, ErrorMessage = "Value {0} require a minimum length of {1} character")]
