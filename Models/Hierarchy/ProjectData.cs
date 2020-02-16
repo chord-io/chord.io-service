@@ -55,8 +55,21 @@ namespace Chord.IO.Service.Models.Hierarchy
             if (isExist == true && httpContext.Request.Method == HttpMethods.Post)
             {
                 results.Add(new ValidationResult(
-                    "project name must be unique",
+                    "name must be unique",
                     new[] { nameof(this.Name) }
+                ));
+            }
+
+            var isTracksNamesUnique = this.Tracks
+                .GroupBy(x => x.Name)
+                .Where(x => x.Count() > 1)
+                .ToList();
+
+            if(isTracksNamesUnique.Count > 0)
+            {
+                results.Add(new ValidationResult(
+                    "name must be unique",
+                    new[] { nameof(Track.Name) }
                 ));
             }
 

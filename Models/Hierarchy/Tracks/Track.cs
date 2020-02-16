@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Chord.IO.Service.Services;
 using JsonSubTypes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -24,23 +25,5 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("color", Required = Required.Always)]
         public int Color { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            var service = validationContext.GetService<ProjectService>();
-
-            var count = service.CountBy(x => x.Tracks.Any(y => y.Name == this.Name)).Result;
-
-            if (count == 1)
-            {
-                results.Add(new ValidationResult(
-                    "track name must be unique", 
-                    new[] { nameof(this.Name) }
-                ));
-            }
-
-            return results;
-        }
     }
 }
