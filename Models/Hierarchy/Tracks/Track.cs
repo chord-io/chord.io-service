@@ -23,7 +23,7 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
 
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("color", Required = Required.Always)]
-        public uint Color { get; set; }
+        public int Color { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
