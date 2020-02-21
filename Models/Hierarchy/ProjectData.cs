@@ -73,17 +73,11 @@ namespace Chord.IO.Service.Models.Hierarchy
                 ));
             }
 
-            var trackIndexes = this.Tracks.Select(x => this.Tracks.IndexOf(x));
-            var trackIndexOutOfBound = this.Themes
-                .Where(x => !trackIndexes.Contains(x.TrackIndex))
-                .ToList();
+            var isThemesNotNull = this.Themes.Any(x => x != null);
 
-            if (trackIndexOutOfBound.Count > 0)
+            if (isThemesNotNull)
             {
-                results.Add(new ValidationResult(
-                    "track index related to a theme must be valid",
-                    new[] { TrackIndexOutOfBoundKeyword }
-                ));
+                results.Add(new ValidationResult("All themes not related to a track must have a null length", new[] { nameof(this.Themes) }));
             }
 
             return results;

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Chord.IO.Service.Models.Hierarchy
 {
-    public class Theme : IValidatableObject
+    public class Theme
     {
         public static readonly string NonUniqueRelationKeyword = "non-unique-relation";
 
@@ -19,30 +19,12 @@ namespace Chord.IO.Service.Models.Hierarchy
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("track_index", Required = Required.Always)]
-        public int TrackIndex { get; set; }
+        [JsonProperty("length", Required = Required.AllowNull)]
+        public ThemeLength Length { get; set; }
 
         [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} sequences")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("sequences", Required = Required.Always)]
         public List<Sequence> Sequences { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            var service = validationContext.GetService<ProjectService>();
-
-            var count = service.CountBy(x => x.Themes.Any(y => y.Name == this.Name && y.TrackIndex == this.TrackIndex)).Result;
-
-            if (count == 1)
-            {
-                results.Add(new ValidationResult(
-                    "relation between a track and a theme must be unique",
-                    new[] { NonUniqueRelationKeyword }
-                ));
-            }
-
-            return results;
-        }
     }
 }
