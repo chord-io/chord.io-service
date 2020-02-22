@@ -36,14 +36,14 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
 
         [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} themes")]
         [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("theme_entries", Required = Required.Always)]
-        public List<ThemeEntry> ThemeEntries { get; set; }
+        [JsonProperty("entries", Required = Required.Always)]
+        public List<ThemeEntry> Entries { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
-            var isThemesNotExist = this.ThemeEntries.Any(x => x.Index >= this.Themes.Count);
+            var isThemesNotExist = this.Entries.Any(x => x.Index >= this.Themes.Count);
 
             if (isThemesNotExist)
             {
