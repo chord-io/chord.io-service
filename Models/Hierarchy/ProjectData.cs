@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Chord.IO.Service.Enums;
+using Chord.IO.Service.Models.Hierarchy.Themes;
 using Chord.IO.Service.Models.Hierarchy.Tracks;
 using Chord.IO.Service.Services;
 using Chord.IO.Service.Utils;
@@ -73,11 +74,11 @@ namespace Chord.IO.Service.Models.Hierarchy
                 ));
             }
 
-            var isThemesNotNull = this.Themes.Any(x => x != null);
+            var isThemesNotExist = this.Tracks.Any(x => x.Themes.Any(y => y.Index >= this.Themes.Count));
 
-            if (isThemesNotNull)
+            if (isThemesNotExist)
             {
-                results.Add(new ValidationResult("All themes not related to a track must have a null length", new[] { nameof(this.Themes) }));
+                results.Add(new ValidationResult("theme entries related to a track must be has a valid index", new[] { nameof(ThemeEntry.Index) }));
             }
 
             return results;

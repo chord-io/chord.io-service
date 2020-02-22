@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace Chord.IO.Service.Models.Hierarchy.Sequences
 {
-    public class DrumSequence : MidiSequence
-    {
-    }
+    public class DrumSequence : MidiSequence {}
 }

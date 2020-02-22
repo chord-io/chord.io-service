@@ -1,22 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Chord.IO.Service.Models.Hierarchy.Sequences
+namespace Chord.IO.Service.Models.Hierarchy.Themes
 {
     public class ThemeLength : IValidatableObject
     {
-        [Range(0, uint.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
-        [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("bar", Required = Required.Always)]
-        public uint Bar { get; set; }
-
-        [Range(0, 1, ErrorMessage = "Value for {0} must be between {1} and {2}")]
+        [Range(0, double.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("start", Required = Required.Always)]
         public double Start { get; set; }
 
-        [Range(0, 1, ErrorMessage = "Value for {0} must be between {1} and {2}")]
+        [Range(0, double.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("end", Required = Required.Always)]
         public double End { get; set; }
@@ -28,8 +26,8 @@ namespace Chord.IO.Service.Models.Hierarchy.Sequences
             if (this.Start >= this.End)
             {
                 results.Add(new ValidationResult(
-                    "start position cannot be equal or greater than end position", 
-                    new[] { nameof(this.Start), nameof(this.End)}
+                    "start position cannot be equal or greater than end position",
+                    new[] { nameof(this.Start), nameof(this.End) }
                 ));
             }
 
