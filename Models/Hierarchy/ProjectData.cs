@@ -39,11 +39,6 @@ namespace Chord.IO.Service.Models.Hierarchy
         [JsonProperty("tracks", Required = Required.Always)]
         public List<Track> Tracks { get; set; }
 
-        [MaxLength(50, ErrorMessage = "Value {0} require a maximum length of {1} themes")]
-        [Required(ErrorMessage = "Value {0} is required")]
-        [JsonProperty("themes", Required = Required.Always)]
-        public List<Theme> Themes { get; set; }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -72,13 +67,6 @@ namespace Chord.IO.Service.Models.Hierarchy
                     "name must be unique",
                     new[] { nameof(Track.Name) }
                 ));
-            }
-
-            var isThemesNotExist = this.Tracks.Any(x => x.Themes.Any(y => y.Index >= this.Themes.Count));
-
-            if (isThemesNotExist)
-            {
-                results.Add(new ValidationResult("theme entries related to a track must be has a valid index", new[] { nameof(ThemeEntry.Index) }));
             }
 
             return results;
