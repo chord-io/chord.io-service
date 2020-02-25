@@ -7,7 +7,7 @@ namespace Chord.IO.Service.Models.Hierarchy.Themes
 {
     public class Theme
     {
-        [MinLength(5, ErrorMessage = "Value {0} require a minimum length of {1} character")]
+        [MinLength(3, ErrorMessage = "Value {0} require a minimum length of {1} character")]
         [MaxLength(30, ErrorMessage = "Value {0} require a maximum length of {1} character")]
         [Required(ErrorMessage = "Value {0} is required")]
         [JsonProperty("name", Required = Required.Always)]
