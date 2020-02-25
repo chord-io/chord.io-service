@@ -58,10 +58,9 @@ namespace Chord.IO.Service.Models.Hierarchy
 
             var isTracksNamesUnique = this.Tracks
                 .GroupBy(x => x.Name)
-                .Where(x => x.Count() > 1)
-                .ToList();
+                .Any(x => x.Count() > 1);
 
-            if(isTracksNamesUnique.Count > 0)
+            if(isTracksNamesUnique)
             {
                 results.Add(new ValidationResult(
                     "name must be unique",

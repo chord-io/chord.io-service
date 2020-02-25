@@ -43,6 +43,18 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
         {
             var results = new List<ValidationResult>();
 
+            var isThemeNameUnique = this.Themes
+                .GroupBy(x => x.Name)
+                .Any(x => x.Count() > 1);
+
+            if (isThemeNameUnique)
+            {
+                results.Add(new ValidationResult(
+                    "name must be unique",
+                    new[] { nameof(Theme.Name) }
+                ));
+            }
+
             var isThemesNotExist = this.Entries.Any(x => x.Index >= this.Themes.Count);
 
             if (isThemesNotExist)
