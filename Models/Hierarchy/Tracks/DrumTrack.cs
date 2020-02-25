@@ -14,7 +14,7 @@ namespace Chord.IO.Service.Models.Hierarchy.Tracks
         [JsonProperty("drum_map", Required = Required.Always)]
         public string DrumMapId { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
             var service = validationContext.GetService<DrumMapService>();
